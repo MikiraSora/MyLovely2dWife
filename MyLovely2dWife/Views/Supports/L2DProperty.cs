@@ -1,6 +1,6 @@
 ﻿using L2DLib.Framework;
 
-namespace InteractiveLogin.Views
+namespace MyLovely2dWife.Views
 {
     public class L2DProperty
     {

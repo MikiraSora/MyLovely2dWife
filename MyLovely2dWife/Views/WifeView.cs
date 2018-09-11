@@ -1,38 +1,75 @@
 ﻿using L2DLib.Framework;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace InteractiveLogin.Views
+namespace MyLovely2dWife.Views
 {
-    public class LoginView : L2DView, ILoginView
+    public class WifeView : L2DView
     {
+        #region Winapi
+
+        [DllImport("User32")]
+        public extern static void SetCursorPos(int x, int y);
+        public struct POINT
+        {
+            public int X;
+            public int Y;
+            public POINT(int x, int y)
+            {
+                this.X = x;
+                this.Y = y;
+            }
+
+            public override string ToString() => $"({X},{Y})";
+        }
+
+        /// <summary>   
+        /// 获取鼠标的坐标   
+        /// </summary>   
+        /// <param name="lpPoint">传址参数，坐标point类型</param>   
+        /// <returns>获取成功返回真</returns>   
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern bool GetCursorPos(out POINT pt);
+
+        #endregion
+
         #region 변수
-        private L2DProperty _armL;
-        private L2DProperty _armR;
+        public L2DProperty _armL;
+        public L2DProperty _armR;
 
-        private L2DProperty _bodyX;
-        private L2DProperty _bodyZ;
+        public L2DProperty _bodyX;
+        public L2DProperty _bodyZ;
 
-        private L2DProperty _angleX;
-        private L2DProperty _angleY;
-        private L2DProperty _angleZ;
+        public L2DProperty _angleX;
+        public L2DProperty _angleY;
+        public L2DProperty _angleZ;
 
-        private L2DProperty _eyeX;
-        private L2DProperty _eyeY;
-        private L2DProperty _eyeKiraKira;
+        public L2DProperty _eyeX;
+        public L2DProperty _eyeY;
+        public L2DProperty _eyeKiraKira;
 
-        private L2DProperty _mouthOpen;
+        public L2DProperty _mouthOpen;
 
-        private bool _isSucceeded = false;
-        private bool _isFailed = false;
+        public List<string> MotionNames
+        {
+            get { return (List<string>)GetValue(MotionNamesProperty); }
+            set { SetValue(MotionNamesProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for MotionNames.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty MotionNamesProperty =
+            DependencyProperty.Register("MotionNames", typeof(List<string>), typeof(WifeView), new PropertyMetadata(new List<string>()));
+       
         #endregion
 
         #region 속성
-        public TextBox Target { get; set; }
 
         public bool IsPrepared { get; set; } = false;
         #endregion
@@ -40,7 +77,7 @@ namespace InteractiveLogin.Views
         #region 내부 함수
         private bool Prepare()
         {
-            if (!IsPrepared && Target != null && Model != null)
+            if (!IsPrepared && Model != null)
             {
                 _armL = new L2DProperty(Model, "PARAM_ARM_L");
                 _armR = new L2DProperty(Model, "PARAM_ARM_R");
@@ -57,6 +94,8 @@ namespace InteractiveLogin.Views
                 _eyeKiraKira = new L2DProperty(Model, "PARAM_EYE_BALL_KIRAKIRA");
 
                 _mouthOpen = new L2DProperty(Model, "PARAM_MOUTH_OPEN_Y");
+
+                MotionNames = Model.Motion.Keys.ToList();
 
                 IsPrepared = true;
             }
@@ -76,32 +115,11 @@ namespace InteractiveLogin.Views
         }
         #endregion
 
-        #region 사용자 함수
-        public void ShowSuccess()
+        public enum PlayStatus
         {
-            Reset(true);
-            _isSucceeded = true;
-            Model.Motion["tap_body"].Where(x => x.Path.Contains("tapBody01")).First().StartMotion();
+            Idle,
+            Motion
         }
-
-        public void ShowFail()
-        {
-            Reset(true);
-            _isFailed = true;
-            Model.Motion["shake"].Where(x => x.Path.Contains("shake01")).First().StartMotion();
-        }
-
-        public void Reset(bool force = false)
-        {
-            if (!force)
-            {
-                Model.Motion["flick_head"].Where(x => x.Path.Contains("flickHead03")).First().StartMotion();
-            }
-
-            _isSucceeded = false;
-            _isFailed = false;
-        }
-        #endregion
 
         public override void Rendering()
         {
@@ -109,32 +127,16 @@ namespace InteractiveLogin.Views
             {
                 Model.LoadParam();
 
-                var progress = (float)(MeasureText(Target).Width / (Target.ActualWidth / 2)) - 1.0f;
-
-                _angleZ.AnimatableValue = 0.0f;
-                _mouthOpen.AnimatableValue = 0.0f;
-
-                if (Target.IsFocused)
+                if (!UpdatedMotion)
                 {
-                    if (_isSucceeded || _isFailed)
+                    //空闲状态，看鼠标
+                    if (GetCursorPos(out var point))
                     {
-                        Reset();
+                        Console.WriteLine(point);
                     }
-
-                    _armL.AnimatableValue = -1.0f;
-                    _armR.AnimatableValue = -1.0f;
-
-                    _bodyX.AnimatableValue = Math.Min(progress, 1.0f);
-                    _bodyZ.AnimatableValue = Math.Min(progress, 1.0f) * 0.5f;
-
-                    _angleX.AnimatableValue = Math.Min(progress * 30f, 30f);
-                    _angleY.AnimatableValue = -20f;
-
-                    _eyeX.AnimatableValue = Math.Min(progress, 1.0f);
-                    _eyeY.AnimatableValue = -1.0f;
-                    _eyeKiraKira.AnimatableValue = 1.0f;
                 }
-                else
+                
+                /*
                 {
                     _armL.AnimatableValue = 0.0f;
                     _armR.AnimatableValue = 0.0f;
@@ -149,6 +151,7 @@ namespace InteractiveLogin.Views
                     _eyeY.AnimatableValue = 0.0f;
                     _eyeKiraKira.AnimatableValue = 0.0f;
                 }
+                */
 
                 Model.SaveParam();
             }

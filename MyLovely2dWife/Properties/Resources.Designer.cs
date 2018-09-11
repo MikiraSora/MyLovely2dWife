@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace InteractiveLogin.Properties
+namespace MyLovely2dWife.Properties
 {
 
 

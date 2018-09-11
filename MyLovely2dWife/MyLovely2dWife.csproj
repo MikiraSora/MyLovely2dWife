@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="L2DLib">
-      <HintPath>..\Datas\DLL\L2DLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -60,23 +57,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\SimpleButton.xaml.cs">
-      <DependentUpon>SimpleButton.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SimpleTextBox.xaml.cs">
-      <DependentUpon>SimpleTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Interfaces\ILoginView.cs" />
-    <Compile Include="Views\LoginView.cs" />
+    <Compile Include="Views\WifeView.cs" />
     <Compile Include="Views\Supports\L2DProperty.cs" />
-    <Page Include="Controls\SimpleButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SimpleTextBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,10 +100,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ImgUsername.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\ImgPassword.png" />
+    <ProjectReference Include="..\..\L2DLib\L2DLib\L2DLib.csproj">
+      <Project>{e3b2470f-875b-45a0-b12e-4d71e6325ac1}</Project>
+      <Name>L2DLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
