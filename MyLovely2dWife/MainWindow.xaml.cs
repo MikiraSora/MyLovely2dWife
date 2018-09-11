@@ -29,6 +29,12 @@ namespace MyLovely2dWife
                 return;
             motions[0].StartMotion();
         }
-        
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Log.Output("Not allow close,just hide");
+            e.Cancel = true;
+            Hide();
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -82,8 +83,8 @@ namespace MyLovely2dWife.Views
                 _armL = new L2DProperty(Model, "PARAM_ARM_L");
                 _armR = new L2DProperty(Model, "PARAM_ARM_R");
 
-                _bodyX = new L2DProperty(Model, "PARAM_BODY_X");
-                _bodyZ = new L2DProperty(Model, "PARAM_BODY_Z");
+                _bodyX = new L2DProperty(Model, "PARAM_BODY_ANGLE_X");
+                _bodyZ = new L2DProperty(Model, "PARAM_BODY_ANGLE_Z");
 
                 _angleX = new L2DProperty(Model, "PARAM_ANGLE_X");
                 _angleY = new L2DProperty(Model, "PARAM_ANGLE_Y");
@@ -91,9 +92,6 @@ namespace MyLovely2dWife.Views
 
                 _eyeX = new L2DProperty(Model, "PARAM_EYE_BALL_X");
                 _eyeY = new L2DProperty(Model, "PARAM_EYE_BALL_Y");
-                _eyeKiraKira = new L2DProperty(Model, "PARAM_EYE_BALL_KIRAKIRA");
-
-                _mouthOpen = new L2DProperty(Model, "PARAM_MOUTH_OPEN_Y");
 
                 MotionNames = Model.Motion.Keys.ToList();
 
@@ -115,11 +113,11 @@ namespace MyLovely2dWife.Views
         }
         #endregion
 
-        public enum PlayStatus
-        {
-            Idle,
-            Motion
-        }
+        const float WIDTH = (1920 / 2.0f);
+        const float HEIGHT = (1080 / 2.0f);
+
+        const float X_OFFSET = -0.5f; //从右边看整个屏幕(屙屎全屏
+        const float Y_OFFSET = 0f;
 
         public override void Rendering()
         {
@@ -132,29 +130,36 @@ namespace MyLovely2dWife.Views
                     //空闲状态，看鼠标
                     if (GetCursorPos(out var point))
                     {
-                        Console.WriteLine(point);
+                        var x = (point.X- WIDTH) / WIDTH;
+                        var y = -(point.Y- HEIGHT) / HEIGHT;
+
+                        x = MathHelper.Clamp(x + X_OFFSET,-1,1);
+                        y = MathHelper.Clamp(y + Y_OFFSET,-1,1);
+
+                        var eye_anime_len = 0.75f;
+                        _eyeX.AnimatableValue = fast_clamp(x, eye_anime_len);
+                        _eyeY.AnimatableValue = fast_clamp(y, eye_anime_len);
+                        /*
+                        var arm_anime_len = 1;
+                        _armL.AnimatableValue = MathHelper.Clamp(arm_anime_len * x, -arm_anime_len, arm_anime_len);
+                        _armR.AnimatableValue = MathHelper.Clamp(arm_anime_len * y, -arm_anime_len, arm_anime_len);
+                        */
+                        var angle_anime_len = 30;
+                        _angleX.AnimatableValue = fast_clamp(x, angle_anime_len);
+                        _angleY.AnimatableValue = fast_clamp(y, angle_anime_len);
+
+                        var body_anime_len = 5;
+                        _bodyX.AnimatableValue = fast_clamp(x, body_anime_len);
+                        _bodyZ.AnimatableValue = fast_clamp(y, body_anime_len);
+
+                        //Console.WriteLine($"point:{point} see:({_eyeX.AnimatableValue},{_eyeY.AnimatableValue})");
                     }
                 }
                 
-                /*
-                {
-                    _armL.AnimatableValue = 0.0f;
-                    _armR.AnimatableValue = 0.0f;
-
-                    _bodyX.AnimatableValue = 0.0f;
-                    _bodyZ.AnimatableValue = 0.0f;
-
-                    _angleX.AnimatableValue = 0.0f;
-                    _angleY.AnimatableValue = 0.0f;
-
-                    _eyeX.AnimatableValue = 0.0f;
-                    _eyeY.AnimatableValue = 0.0f;
-                    _eyeKiraKira.AnimatableValue = 0.0f;
-                }
-                */
-
                 Model.SaveParam();
             }
+
+            float fast_clamp(float val,float len)=> MathHelper.Clamp(len * val, -len, len);
         }
     }
 }
