@@ -1,4 +1,5 @@
-﻿using Sync.Command;
+﻿using OsuRTDataProvider;
+using Sync.Command;
 using Sync.Plugins;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,11 @@ using System.Windows;
 
 namespace MyLovely2dWife
 {
+    [SyncRequirePlugin(typeof(OsuRTDataProvider.OsuRTDataProviderPlugin))]
     public class MyLovely2dWifePlugin : Plugin
     {
         public MainWindow window { get;private set; }
-        private Application application;
+        OsuRTDataProviderPlugin OrtdpPlugin;
 
         public MyLovely2dWifePlugin() : base("MyLovely2dWifePlugin","MikiraSora")
         {
@@ -24,7 +26,12 @@ namespace MyLovely2dWife
 
         private void OnLoadComplete(PluginEvents.LoadCompleteEvent e)
         {
+            OrtdpPlugin = e.Host.EnumPluings().OfType<OsuRTDataProviderPlugin>().FirstOrDefault();
+            if (OrtdpPlugin == null)
+                throw new Exception("MyLovely2dWifePlugin must require OsuRTDataProviderPlugin but there isnt exist.");
 
+            //default show window
+            ShowWindow();
         }
 
         private void OnInitCommand(PluginEvents.InitCommandEvent e)
@@ -60,7 +67,7 @@ namespace MyLovely2dWife
         private void ShowWindow()
         {
             Application.Current?.Dispatcher.InvokeAsync(() => {
-                window = window ?? new MainWindow();
+                window = window ?? new MainWindow(new Trigger(OrtdpPlugin));
                 window.Show();
                 Log.Output("Show window");
             });

@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="MyLovely2dWifePlugin.cs" />
     <Compile Include="MathHelper.cs" />
+    <Compile Include="Trigger.cs" />
     <Compile Include="Utils\Log.cs" />
     <Compile Include="Views\WifeView.cs" />
     <Compile Include="Views\Supports\L2DProperty.cs" />
@@ -105,6 +106,10 @@
     <ProjectReference Include="..\..\L2DLib\L2DLib\L2DLib.csproj">
       <Project>{e3b2470f-875b-45a0-b12e-4d71e6325ac1}</Project>
       <Name>L2DLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MemoryReader\OsuRTDataProvider.csproj">
+      <Project>{D518DC59-CC9A-4886-839F-7691D5EFAE56}</Project>
+      <Name>OsuRTDataProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sync\Sync\Sync.csproj">
       <Project>{FBD514C2-2830-479E-B050-D1C383028456}</Project>

@@ -90,6 +90,8 @@ namespace MyLovely2dWife.Views
                 _angleY = new L2DProperty(Model, "PARAM_ANGLE_Y");
                 _angleZ = new L2DProperty(Model, "PARAM_ANGLE_Z");
 
+                _mouthOpen = new L2DProperty(Model, "PARAM_MOUTH_OPEN_Y");
+
                 _eyeX = new L2DProperty(Model, "PARAM_EYE_BALL_X");
                 _eyeY = new L2DProperty(Model, "PARAM_EYE_BALL_Y");
 
@@ -151,6 +153,8 @@ namespace MyLovely2dWife.Views
                         var body_anime_len = 5;
                         _bodyX.AnimatableValue = fast_clamp(x, body_anime_len);
                         _bodyZ.AnimatableValue = fast_clamp(y, body_anime_len);
+
+                        _mouthOpen.AnimatableValue = 0.5f;
 
                         //Console.WriteLine($"point:{point} see:({_eyeX.AnimatableValue},{_eyeY.AnimatableValue})");
                     }
