@@ -12,5 +12,5 @@
     UseLayoutRounding="True"
     mc:Ignorable="d">
 
-    <Views:WifeView x:Name="renderView" Width="800" Height="600" Grid.Row="0"/>
+    <Views:WifeView x:Name="renderView" Width="800" Height="600" Grid.Row="0" />
 </Window>

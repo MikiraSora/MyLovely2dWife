@@ -1,12 +1,8 @@
 ﻿using L2DLib.Framework;
 using L2DLib.Utility;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace MyLovely2dWife
 {
@@ -18,11 +14,11 @@ namespace MyLovely2dWife
         public Trigger Trigger { get; }
         public L2DModel Model => renderView.Model;
 
-        Random rand = new Random();
+        private Random rand = new Random();
 
-        Timer idle_motion_timer;
+        private Timer idle_motion_timer;
 
-        public MainWindow(Trigger trigger) 
+        public MainWindow(Trigger trigger)
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
@@ -41,7 +37,7 @@ namespace MyLovely2dWife
             idle_motion_timer = new Timer(OnIdleTimer, null, GetIdleNextTime(), Timeout.Infinite);
         }
 
-        private int GetIdleNextTime() => (int)(30000 * (rand.NextDouble()+0.5));
+        private int GetIdleNextTime() => (int)(30000 * (rand.NextDouble() + 0.5));
 
         private void Trigger_OnStatus(bool is_listen)
         {
@@ -58,7 +54,7 @@ namespace MyLovely2dWife
 
         private void Trigger_OnBreak(int combo_diff)
         {
-            if (combo_diff>=100)
+            if (combo_diff >= 100)
             {
                 ShowBreakMotion();
             }
@@ -68,7 +64,7 @@ namespace MyLovely2dWife
         {
             ShowIdelMotion();
 
-            //next 
+            //next
             idle_motion_timer.Change(GetIdleNextTime(), Timeout.Infinite);
         }
 
@@ -107,7 +103,7 @@ namespace MyLovely2dWife
             StartMotion("combo");
         }
 
-        #endregion
+        #endregion Show Motion
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

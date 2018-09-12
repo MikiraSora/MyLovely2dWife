@@ -1,8 +1,6 @@
 ﻿using L2DLib.Framework;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -17,10 +15,12 @@ namespace MyLovely2dWife.Views
 
         [DllImport("User32")]
         public extern static void SetCursorPos(int x, int y);
+
         public struct POINT
         {
             public int X;
             public int Y;
+
             public POINT(int x, int y)
             {
                 this.X = x;
@@ -30,18 +30,19 @@ namespace MyLovely2dWife.Views
             public override string ToString() => $"({X},{Y})";
         }
 
-        /// <summary>   
-        /// 获取鼠标的坐标   
-        /// </summary>   
-        /// <param name="lpPoint">传址参数，坐标point类型</param>   
-        /// <returns>获取成功返回真</returns>   
+        /// <summary>
+        /// 获取鼠标的坐标
+        /// </summary>
+        /// <param name="lpPoint">传址参数，坐标point类型</param>
+        /// <returns>获取成功返回真</returns>
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern bool GetCursorPos(out POINT pt);
 
-        #endregion
+        #endregion Winapi
 
         #region 변수
+
         public L2DProperty _armL;
         public L2DProperty _armR;
 
@@ -67,15 +68,17 @@ namespace MyLovely2dWife.Views
         // Using a DependencyProperty as the backing store for MotionNames.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty MotionNamesProperty =
             DependencyProperty.Register("MotionNames", typeof(List<string>), typeof(WifeView), new PropertyMetadata(new List<string>()));
-       
-        #endregion
+
+        #endregion 변수
 
         #region 속성
 
         public bool IsPrepared { get; set; } = false;
-        #endregion
+
+        #endregion 속성
 
         #region 내부 함수
+
         private bool Prepare()
         {
             if (!IsPrepared && Model != null)
@@ -113,13 +116,14 @@ namespace MyLovely2dWife.Views
 
             return new Size(formatted.Width, formatted.Height);
         }
-        #endregion
 
-        const float WIDTH = (1920 / 2.0f);
-        const float HEIGHT = (1080 / 2.0f);
+        #endregion 내부 함수
 
-        const float X_OFFSET = -0.5f; //从右边看整个屏幕(屙屎全屏
-        const float Y_OFFSET = 0f;
+        private const float WIDTH = (1920 / 2.0f);
+        private const float HEIGHT = (1080 / 2.0f);
+
+        private const float X_OFFSET = -0.5f; //从右边看整个屏幕(屙屎全屏
+        private const float Y_OFFSET = 0f;
 
         public override void Rendering()
         {
@@ -132,11 +136,11 @@ namespace MyLovely2dWife.Views
                     //空闲状态，看鼠标
                     if (GetCursorPos(out var point))
                     {
-                        var x = (point.X- WIDTH) / WIDTH;
-                        var y = -(point.Y- HEIGHT) / HEIGHT;
+                        var x = (point.X - WIDTH) / WIDTH;
+                        var y = -(point.Y - HEIGHT) / HEIGHT;
 
-                        x = MathHelper.Clamp(x + X_OFFSET,-1,1);
-                        y = MathHelper.Clamp(y + Y_OFFSET,-1,1);
+                        x = MathHelper.Clamp(x + X_OFFSET, -1, 1);
+                        y = MathHelper.Clamp(y + Y_OFFSET, -1, 1);
 
                         var eye_anime_len = 0.75f;
                         _eyeX.AnimatableValue = fast_clamp(x, eye_anime_len);
@@ -159,11 +163,11 @@ namespace MyLovely2dWife.Views
                         //Console.WriteLine($"point:{point} see:({_eyeX.AnimatableValue},{_eyeY.AnimatableValue})");
                     }
                 }
-                
+
                 Model.SaveParam();
             }
 
-            float fast_clamp(float val,float len)=> MathHelper.Clamp(len * val, -len, len);
+            float fast_clamp(float val, float len) => MathHelper.Clamp(len * val, -len, len);
         }
     }
 }

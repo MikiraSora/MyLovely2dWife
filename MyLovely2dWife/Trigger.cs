@@ -1,9 +1,5 @@
 ﻿using OsuRTDataProvider;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static OsuRTDataProvider.Listen.OsuListenerManager;
 
 namespace MyLovely2dWife
@@ -35,12 +31,12 @@ namespace MyLovely2dWife
             ortdp_plugin.ListenerManager.OnStatusChanged += OnStatusChanged;
         }
 
-        private void OnStatusChanged(OsuRTDataProvider.Listen.OsuListenerManager.OsuStatus last_status, OsuRTDataProvider.Listen.OsuListenerManager.OsuStatus status)
+        private void OnStatusChanged(OsuStatus last_status, OsuStatus status)
         {
             //clean
             prev_combo = combo_level = 0;
 
-            if (last_status==OsuStatus.Rank&&(status==OsuStatus.SelectSong|| status==OsuStatus.MatchSetup))
+            if (last_status == OsuStatus.Rank && (status == OsuStatus.SelectSong || status == OsuStatus.MatchSetup))
             {
                 OnStatus?.Invoke(true);
             }
@@ -51,23 +47,23 @@ namespace MyLovely2dWife
             }
         }
 
-        private int prev_combo=0;
-        private int combo_level=0;
-        private const int COMBO_RANK_DEFAULT= 100;
+        private int prev_combo = 0;
+        private int combo_level = 0;
+        private const int COMBO_RANK_DEFAULT = 100;
 
         private void OnComboChanged(int combo)
         {
             if (combo == prev_combo)
                 return;
 
-            if (combo<prev_combo)
+            if (combo < prev_combo)
             {
                 combo_level = 0;
                 OnBreak?.Invoke(Math.Abs(combo - prev_combo));
             }
             else
             {
-                if (combo>=(combo_level+1)*COMBO_RANK_DEFAULT)
+                if (combo >= (combo_level + 1) * COMBO_RANK_DEFAULT)
                 {
                     combo_level++;
                     OnComboRankUp?.Invoke(combo_level);
