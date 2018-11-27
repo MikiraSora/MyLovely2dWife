@@ -56,6 +56,7 @@ namespace MyLovely2dWife
 
         private void ShowHelp()
         {
+
         }
 
         private void ShowWindow()

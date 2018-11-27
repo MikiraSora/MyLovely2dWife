@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="WPF Live2D Demo"
     Width="800"
+    Background="Black"
     Height="600"
     Closing="Window_Closing"
     UseLayoutRounding="True"
